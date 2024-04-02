@@ -1,2 +1,7 @@
+# app/models/role.rb
 class Role < ApplicationRecord
-end
+    def self.create(name:)
+      ActiveRecord::Base.connection.execute("CREATE ROLE #{name}")
+    end
+  end
+  
