@@ -1,12 +1,18 @@
-class RolesController < ApplicationController
+require './app/services/role_service' 
+
+class Api::V1::RolesController < ApplicationController
   before_action :set_role, only: %i[ show update destroy ]
 
   # GET /roles
   def index
-    @roles = Role.all
+    @roles = RoleService.list_roles
 
     render json: @roles
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
+
+  
 
   # GET /roles/1
   def show
@@ -15,10 +21,10 @@ class RolesController < ApplicationController
 
   # POST /roles
   def create
-    role_name = params[:name]  # Assuming you're passing the role name through params
+    role = params[:name]  # Assuming you're passing the role name through params
     
     # Execute the raw SQL query to create the role
-    RoleService.create_role(role_name)
+    RoleService.create_role(role)
   
     render json: { message: "Role '#{role_name}' created successfully" }, status: :created
   rescue => e
