@@ -12,11 +12,14 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      namespace :postgres do
       get "/roles", to: "roles#index"
       post "/roles", to: "roles#create"
-      get "/users", to: "users#index"
       
-
+      get "/users", to: "users#index"
+      post "/users", to: "users#create"
+      get "/users/:id", to: "users#show"
+     end
     end
   end
 end
