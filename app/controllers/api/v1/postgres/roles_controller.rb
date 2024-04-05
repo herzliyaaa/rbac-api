@@ -1,11 +1,11 @@
 require './app/services/postgres/role_service'
 
 class Api::V1::Postgres::RolesController < ApplicationController
-  before_action :set_role, only: %i[ show update destroy ]
+  before_action :set_role, only: [:show, :update, :destroy]
 
   # GET /roles
   def index
-    @roles = RoleService.listRoles
+    @roles = RoleService.new.list_roles  # Call instance method list_roles
 
     render json: @roles
   rescue => e
@@ -19,17 +19,14 @@ class Api::V1::Postgres::RolesController < ApplicationController
 
   # POST /roles
   def create
-    role_name = params[:name]  # Assuming you're passing the role name through params
-  
-    # Execute the raw SQL query to create the role
-    RoleService.createRole(name: role_name)
-  
-    render json: { message: "Role '#{role_name}' created successfully" }, status: :created
+    role_params = { name: params[:name] }  # Create role_params hash
+    RoleService.new.create_role(role_params)  # Call instance method create_role
+
+    render json: { message: "Role '#{role_params[:name]}' created successfully" }, status: :created
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
-  
-  
+
   # PATCH/PUT /roles/1
   def update
     if @role.update(role_params)
@@ -37,7 +34,7 @@ class Api::V1::Postgres::RolesController < ApplicationController
     else
       render json: @role.errors, status: :unprocessable_entity
     end
-  end 
+  end
 
   # DELETE /roles/1
   def destroy
@@ -52,8 +49,8 @@ class Api::V1::Postgres::RolesController < ApplicationController
     render json: { error: "Role not found" }, status: :not_found
   end
 
-    # Only allow a list of trusted parameters through.
-    def role_params
-      params.permit(:name)  # Adjusted to permit only :name
-    end
+  # Only allow a list of trusted parameters through.
+  def role_params
+    params.permit(:name)  # Adjusted to permit only :name
+  end
 end

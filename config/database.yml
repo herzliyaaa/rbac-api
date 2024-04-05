@@ -7,3 +7,11 @@ development:
     host: <%= ENV['POSTGRESQL_HOST'] %>
     port: <%= ENV['POSTGRESQL_PORT'] %>
 
+  mssql:
+    adapter: sqlserver
+    username: <%= ENV['MSSQL_USERNAME'] %>
+    password: <%= ENV['MSSQL_PASSWORD'] %>
+    host: <%= ENV['MSSQL_HOST'] %>
+    port: <%= ENV['MSSQL_PORT'] %>
+    encrypt: true
+    trust_server_certificate: true
