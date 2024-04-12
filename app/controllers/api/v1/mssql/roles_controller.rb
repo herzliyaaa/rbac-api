@@ -1,11 +1,11 @@
-require './app/services/postgres/role_service'
+require './app/services/mssql/role_service'
 
-class Api::V1::Postgres::RolesController < ApplicationController
+class Api::V1::Mssql::RolesController < ApplicationController
   before_action :set_role, only: [:show, :update, :destroy]
 
   # GET /roles
   def index
-    @roles = PostgresRoleService.new.list_roles  # Call instance method list_roles
+    @roles = MSSQLRoleService.new.list_roles  # Call instance method list_roles
 
     render json: @roles
   rescue => e
@@ -20,11 +20,11 @@ class Api::V1::Postgres::RolesController < ApplicationController
   # POST /roles
   def create
     role_params = { name: params[:name] }  # Create role_params hash
-    PostgresRoleService.new.create_role(role_params)  # Call instance method create_role
+    MSSQLRoleService.new.create_role(role_params)  # Call instance method create_role
 
     render json: { message: "Role '#{role_params[:name]}' created successfully" }, status: :created
   rescue => e
-    render json: { error: e.message }, status: :bad_request
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   # PATCH/PUT /roles/1

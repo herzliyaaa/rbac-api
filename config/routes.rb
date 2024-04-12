@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :users
-  resources :roles
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -13,13 +11,14 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :postgres do
-      get "/roles", to: "roles#index"
-      post "/roles", to: "roles#create"
-      
-      get "/users", to: "users#index"
-      post "/users", to: "users#create"
-      get "/users/:id", to: "users#show"
-     end
+        resources :roles, only: [:index, :create]
+        resources :users, only: [:index, :create, :show]
+      end
+
+      namespace :mssql do
+        resources :roles, only: [:index, :create]
+        resources :users, only: [:index, :create, :show]
+      end
     end
   end
 end
